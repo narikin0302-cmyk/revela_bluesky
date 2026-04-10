@@ -1,0 +1,7 @@
+{
+  "name": "revela-bluesky",
+  "type": "module",
+  "dependencies": {
+    "@atproto/api": "^0.13.0"
+  }
+}
