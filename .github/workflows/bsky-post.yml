@@ -1,0 +1,31 @@
+name: Bluesky Auto Post
+
+on:
+  schedule:
+    # JST 7:00, 12:00, 18:00, 22:00（UTC +9）
+    - cron: '0 22 * * *'   # JST 7:00
+    - cron: '0 3 * * *'    # JST 12:00
+    - cron: '0 9 * * *'    # JST 18:00
+    - cron: '0 13 * * *'   # JST 22:00
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: revela/package-lock.json
+
+      - name: Install dependencies
+        run: cd revela && npm ci
+
+      - name: Post to Bluesky
+        run: node revela/scripts/bsky.mjs
+        env:
+          BSKY_IDENTIFIER: ${{ secrets.BSKY_IDENTIFIER }}
+          BSKY_APP_PASSWORD: ${{ secrets.BSKY_APP_PASSWORD }}
